@@ -11,9 +11,9 @@ const Dashboard = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showPrevScans, setShowPrevScans] = useState(false);
-  const [showCamera, setShowCamera] = useState(false); // State to toggle camera
-  const webcamRef = useRef(null); // Ref for the webcam
-  const navigate = useNavigate(); // Hook to navigate between routes
+  const [showCamera, setShowCamera] = useState(false); 
+  const webcamRef = useRef(null); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchScannedDetails = async () => {
@@ -23,7 +23,6 @@ const Dashboard = () => {
           return navigate('/login');
         }
 
-        // Fetch remaining scans
         const remainingScansResponse = await fetch("http://localhost:5000/check-scans", {
           method: "GET",
           headers: { Authorization: token },
@@ -36,7 +35,6 @@ const Dashboard = () => {
           setErrorMessage(remainingScansData.error || "Failed to fetch remaining scans");
         }
 
-        // Fetch scanned documents
         const scannedDocsResponse = await fetch("http://localhost:5000/getScannedDetail", {
           method: "GET",
           headers: { Authorization: token },
@@ -85,7 +83,6 @@ const Dashboard = () => {
         setStructuredData(responseData.data || {});
         setRemainingScans(responseData.remainingScans || 0);
 
-        // Add new scanned document at the top
         setScannedDocs((prevDocs) => [
           {
             pdf_name: file.name || "Camera Capture",
@@ -108,7 +105,7 @@ const Dashboard = () => {
   const handleCameraCapture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
-      // Convert the image to a file
+    
       fetch(imageSrc)
         .then((res) => res.blob())
         .then((blob) => {
@@ -119,13 +116,12 @@ const Dashboard = () => {
     }
   };
 
-  // Reset the scan process
   const resetScan = () => {
     setStructuredData(null);
     setSelectedFile(null);
     setSuccessMessage("");
     setErrorMessage("");
-    setShowCamera(false); // Close the camera if open
+    setShowCamera(false); 
   };
 
   return (
@@ -134,7 +130,6 @@ const Dashboard = () => {
         <h1 className="card-title">Document Scanner Dashboard</h1>
         <div className="scan-counter">Remaining Scans: {remainingScans}</div>
 
-        {/* Button to show/hide previous scans */}
         <button
           onClick={() => setShowPrevScans(!showPrevScans)}
           className="btn btn-secondary prev-scans-btn"
@@ -165,7 +160,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Camera Option */}
         <button
           onClick={() => setShowCamera(!showCamera)}
           className="btn btn-secondary"
@@ -199,7 +193,6 @@ const Dashboard = () => {
           {loading ? "Scanning..." : "Scan Document"}
         </button>
 
-        {/* Reset Scan Button */}
         {structuredData && (
           <button
             onClick={resetScan}
@@ -210,7 +203,6 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Show extracted data immediately below scan section */}
       {structuredData && (
         <div className="card">
           <h2>Scanned Document Data</h2>
@@ -233,7 +225,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Previous Scans Modal */}
       {showPrevScans && (
         <div className="modal">
           <div className="modal-content">
